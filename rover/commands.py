@@ -1,9 +1,9 @@
 import os
 import pathlib
-import pooch
 import subprocess
-
 from typing import Dict, Iterable, Union
+
+import pooch
 
 from ._utils import kvp_parse
 
@@ -15,7 +15,7 @@ def fetch(
 ):
     registry: Dict[str, str] = kvp_parse(kvp_strings=files)
 
-    mnt_dir = "./mnt/" 
+    mnt_dir = "./mnt/"
     base_path: str = str(pathlib.Path(f"{mnt_dir}Rover/").absolute()) + "/"
     path: str = f"{base_path}{repo}"
     gitignore: str = f"{mnt_dir}/.gitignore"

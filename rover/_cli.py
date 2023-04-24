@@ -2,7 +2,7 @@ import argparse
 import sys
 from typing import Sequence
 
-from .commands import (fetch)
+from .commands import fetch
 
 
 def setup_parser() -> argparse.ArgumentParser:

@@ -1,7 +1,7 @@
 from typing import Dict, Iterable
 
 
-def kvp_parse (
+def kvp_parse(
         kvp_strings: Iterable[str]
 ) -> Dict[str, str]:
     """
