@@ -42,6 +42,10 @@ def setup_parser() -> argparse.ArgumentParser:
         "--file", "-f", metavar="FILENAME:HASH", nargs="+", dest="files",
         help="A file and its checksum hash, separated by ':'."
     )
+    fetch_parser.add_argument(
+        "--no-cache", action="store_true", default=False,
+        help="If used, delete and redownload all files."
+    )
 
     return parser
 

@@ -1,0 +1,7 @@
+name: base
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python>=3.7
+  - pooch>=1.7.0
