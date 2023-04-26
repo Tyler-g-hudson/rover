@@ -39,8 +39,8 @@ def setup_parser() -> argparse.ArgumentParser:
         help='The URL of the repository.'
     )
     fetch_parser.add_argument(
-        "--file", "-f", metavar="FILENAME:HASH", nargs="+", dest="files",
-        help="A file and its checksum hash, separated by ':'."
+        "--file", "-f", metavar="FILENAME=HASH", nargs="+", dest="files",
+        help="A file and its checksum hash, separated by '='."
     )
     fetch_parser.add_argument(
         "--no-cache", action="store_true", default=False,

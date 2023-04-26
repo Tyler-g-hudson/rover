@@ -63,9 +63,26 @@ def delete_registry_files(
         return
     # Otherwise, delete every file in the registry that exists in the repostiory.
     for file in registry:
-        filepath = f"{repo_path}/{file}"
-        if pathlib.Path(filepath).is_file():
-            subprocess.run(["rm", "filepath"])
+        _delete_if_exists(filename=file, path=repo_path)
+
+
+def _delete_if_exists(
+    filename: str,
+    path: Union[os.PathLike[str], str]
+) -> None:
+    """
+    Deletes a file if it exists on the system.
+
+    Parameters
+    ----------
+    filename : str
+        The name of the file.
+    path : Union[os.PathLike[str], str]
+        The path to the file directory.
+    """
+    filepath = f"{path}/{filename}"
+    if pathlib.Path(filepath).is_file():
+        subprocess.run(["rm", "filepath"])
 
 
 def check_registry_files(
@@ -88,21 +105,32 @@ def check_registry_files(
     # Otherwise, check every file in the registry that exists in the repostiory.
     for file in registry:
         known_hash = registry[file]
-        filepath = f"{repo_path}/{file}"
-        # If the local file doesn't exist, move on.
-        if not pathlib.Path(filepath).is_file():
-            continue
-        # Hash the local file and compare that hash to the input hash.
-        repo_hash = pooch.file_hash(filepath)
-        if not repo_hash == known_hash:
-            # If the hashes are different, this constitutes an error.
-            # Either the user's local file has changed or their hash was modified.
-            # In either case, throw an error.
-            raise HashCollisionError(
-                message=dedent(f"""
-                {file} local hash differs from known-good hash!
-                This means that your local file differs from the known file.
-                Please check your file and, if you would like to proceed,
-                use --no-cache.
-                """).strip()
-            )
+        _check_file_hash(
+            filename=file,
+            known_hash=known_hash,
+            path=repo_path
+        )
+
+
+def _check_file_hash(
+    filename: str,
+    known_hash: str,
+    path: Union[os.PathLike[str], str]
+) -> None:
+    filepath = f"{path}/{filename}"
+    # If the local file doesn't exist, move on.
+    if not pathlib.Path(filepath).is_file():
+        return
+    # Hash the local file and compare that hash to the input hash.
+    repo_hash = pooch.file_hash(filepath)
+    if not repo_hash == known_hash:
+        # If the hashes are different, this constitutes an error.
+        # Either the user's local file has changed or their hash was modified.
+        # In either case, throw an error.
+        raise HashCollisionError(
+            message=dedent(f"""
+            {filename} local hash differs from known-good hash!
+            This means that your local file differs from the known file.
+            Please check your file and, if you would like to proceed, use --no-cache.
+            """).strip()
+        )

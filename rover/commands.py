@@ -37,7 +37,7 @@ def fetch(
     # The repository path is the base path with "/[REPO_NAME]" appended to it.
     repo_path: str = f"{base_path}{repo}"
     # A .gitignore file either exists at the base path or will be put there.
-    gitignore: str = f"{mnt_dir}/.gitignore"
+    gitignore: str = f"{base_path}.gitignore"
 
     if no_cache:
         # for item in repo, if item exists, remove it.
@@ -47,6 +47,8 @@ def fetch(
         check_registry_files(registry=registry, repo_path=repo_path)
 
     # Build the repository directory if it doesn't already exist.
+    if not pathlib.Path(base_path).is_dir():
+        subprocess.run(["mkdir", "-p", base_path])
     if not pathlib.Path(repo_path).is_dir():
         subprocess.run(["mkdir", "-p", repo_path])
     if not pathlib.Path(gitignore).is_file():
