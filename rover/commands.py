@@ -24,10 +24,11 @@ def fetch(
     url : str
         The URL of the online file repo.
     files : Iterable[str]
-        A set of files and hashes in "[FILE]:[HASH]" format.
+        A set of files and hashes in "[FILE]=[HASH]" format.
     no_cache : bool, optional
         If true, delete and redownload all requested files. Defaults to False.
     """
+    print(f"Rover is retrieving samples from {repo}!")
     # The registry is the set of files and hashes in dictionary format.
     registry: Dict[str, str] = kvp_parse(kvp_strings=files)
 
@@ -65,4 +66,5 @@ def fetch(
 
     # Fetch all of the requested files.
     for key in registry:
-        poppy.fetch(fname=key)
+        poppy.fetch(fname=key, progressbar=True)
+    print(f"Rover has returned all samples in {repo}!")
