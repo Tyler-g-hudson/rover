@@ -65,8 +65,6 @@ def main(
     del args_parsed.command
     if command == "fetch":
         fetch(**vars(args_parsed))
-    '''elif command == "lockfile":
-        make_lockfile(**vars(args_parsed))'''
 
 
 def insufficient_subcommands_message(

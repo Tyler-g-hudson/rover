@@ -9,6 +9,10 @@ import pooch
 from ._exceptions import HashCollisionError
 
 
+def my_name(repo: Union[os.PathLike[str], str]) -> str:
+    return f"Rover {repo}"
+
+
 def kvp_parse(
         kvp_strings: Iterable[str]
 ) -> Dict[str, str]:
@@ -34,7 +38,7 @@ def kvp_parse(
     # Populate the above dictionary with each of the strings.
     for value in kvp_strings:
         kvp = value.split("=")
-        # If the length of the split string is not 2, then too few or many ":"
+        # If the length of the split string is not 2, then too few or many "="
         # characters were used. Reject this string.
         if len(kvp) != 2:
             raise ValueError(f"{value} is not a key-value pair.")
@@ -46,7 +50,8 @@ def kvp_parse(
 
 def delete_registry_files(
         registry: Iterable[str],
-        repo_path: Union[os.PathLike[str], str]
+        repo_path: Union[os.PathLike[str], str],
+        repo: Union[os.PathLike[str], str]
 ) -> None:
     """
     Deletes all of the local copies of files in a registry, if they exist.
@@ -64,12 +69,13 @@ def delete_registry_files(
     print("Rover is cleaning up for your next delivery!")
     # Otherwise, delete every file in the registry that exists in the repostiory.
     for file in registry:
-        _delete_if_exists(filename=file, path=repo_path)
+        _delete_if_exists(filename=file, path=repo_path, repo=repo)
 
 
 def _delete_if_exists(
     filename: str,
-    path: Union[os.PathLike[str], str]
+    path: Union[os.PathLike[str], str],
+    repo: Union[os.PathLike[str], str]
 ) -> None:
     """
     Deletes a file if it exists on the system.
@@ -83,7 +89,7 @@ def _delete_if_exists(
     """
     filepath = f"{path}/{filename}"
     if pathlib.Path(filepath).is_file():
-        print(f"\tRemoving {filename}...")
+        print(f"\tRemoving {repo}/{filename}...")
         subprocess.run(["rm", filepath])
 
 

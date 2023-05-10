@@ -5,7 +5,7 @@ from typing import Dict, Iterable, Union
 
 import pooch
 
-from ._utils import check_registry_files, delete_registry_files, kvp_parse
+from ._utils import delete_registry_files, kvp_parse, my_name
 
 
 def fetch(
@@ -28,7 +28,9 @@ def fetch(
     no_cache : bool, optional
         If true, delete and redownload all requested files. Defaults to False.
     """
-    print(f"Rover is retrieving samples from {repo}!")
+    name = my_name(repo=repo)
+
+    print(f"{name} is retrieving samples!", flush=True)
     # The registry is the set of files and hashes in dictionary format.
     registry: Dict[str, str] = kvp_parse(kvp_strings=files)
 
@@ -42,10 +44,10 @@ def fetch(
 
     if no_cache:
         # for item in repo, if item exists, remove it.
-        delete_registry_files(registry=registry, repo_path=repo_path)
+        delete_registry_files(registry=registry, repo_path=repo_path, repo=repo)
     else:
         # for item in repo, hash local version. if hash != repo hash, error.
-        check_registry_files(registry=registry, repo_path=repo_path)
+        pass  # check_registry_files(registry=registry, repo_path=repo_path)
 
     # Build the repository directory if it doesn't already exist.
     if not pathlib.Path(base_path).is_dir():
@@ -57,6 +59,7 @@ def fetch(
             f.write("*\n")
 
     # Set up the Pooch repository object.
+    print(f"{name} is fetching!", flush=True)
     poppy: pooch.Pooch = pooch.create(
         path=repo_path,
         base_url=url,
@@ -66,5 +69,6 @@ def fetch(
 
     # Fetch all of the requested files.
     for key in registry:
-        poppy.fetch(fname=key, progressbar=True)
-    print(f"Rover has returned all samples in {repo}!")
+        print(f"\tFetching {repo}/{key}...", flush=True)
+        poppy.fetch(fname=key)
+    print(f"{name} has returned all samples!", flush=True)
