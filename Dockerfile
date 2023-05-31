@@ -19,9 +19,9 @@ RUN micromamba install -y -n base -f environment.yml \
  && rm environment.yml
 
 RUN mkdir -p ${MOUNT_LOCATION} \
- && chmod -R 0777 ${MOUNT_LOCATION} \
+ && chmod -R 0755 ${MOUNT_LOCATION} \
  && mkdir -p ${ROVER_LOCATION} \
- && chmod -R 0777 ${ROVER_LOCATION}
+ && chmod -R 0755 ${ROVER_LOCATION}
 
 # Give control to the default mamba user.
 WORKDIR ${ROVER_LOCATION}
